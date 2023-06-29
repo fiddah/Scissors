@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="hero-dashboard" style="padding: 100px 20px;">
+    {% if current_user.is_authenticated %}
+        {% if urls %}
+            {% for url in urls %}
+            <div class="card" style="width: 100%; border: 2px red solid; padding: 15px; border-radius: 5px;">
+                <img class="card-img-top" src="{{url_for('generate_qr_code_url', short_url=url.short_url)}}" alt="QR Code">
+                <div class="card-body">
+                  <h5 class="card-title">Link Clicks: {{url.clicks}} <br>Created: {{ url.created_at.strftime('%B %d, %Y') }}</h5>
+                  <p class="card-text">{{ url.long_url }}</p>
+                  <p>Shortened Link: <br>
+                    <a href="{{ url_for('redirect_url', short_url=url.short_url) }}" style="color: aliceblue; text-decoration: underline;" target="_blank">
+                    <input type="text" value="{{host}}{{url.short_url}}" id="myInput" style="background: none; border: none; cursor: pointer; color: blue; text-decoration: underline;" disabled>
+                    </a>
+                    </p>
+                  <button onclick="myFunction()">Copy Link</button>
+                </div>
+              </div>
+            {% endfor %}
+        {% else %}
+            <h1>You do not have any urls yet. <a href="{{url_for('home')}}">Click to Create</a> </h1>
+        {% endif %}
+    {% else %}
+    <h1>Please login to see your urls</h1>
+    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for message in messages %}
+                <strong style="color:red;">{{ message }}</strong>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</section>
+    
+{% endblock %}

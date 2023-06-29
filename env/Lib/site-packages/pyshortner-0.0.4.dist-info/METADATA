@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: pyshortner
+Version: 0.0.4
+Summary: An Unofficial API
+Home-page: https://t.me/DKBOTZ
+Author: DK BOTZ
+Author-email: dkbotzhelp@gmail.com
+License: MIT
+Keywords: python,url-shortener
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: aiohttp
+Requires-Dist: shortzyy
+
+
+# pyshortner

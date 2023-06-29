@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: shortzyy
+Version: 0.0.6
+Summary: An Unofficial Asynchronous Python version of Adlinkfly and Alternative Website API wrapper
+Home-page: https://github.com/kevinnadar22/shortzy
+Author: Kevin Nadar
+Author-email: jesikamaraj@gmail.com
+License: MIT
+Keywords: python,droplink,gplink,url-shortener,earn money,shareus
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: aiohttp
+
+
+# Hi
