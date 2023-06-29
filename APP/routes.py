@@ -129,7 +129,7 @@ def about():
     return render_template('about.html')
 
 @app.route('/<short_url>')
-@cache.cached(timeout=50)
+@cache.cached(timeout=30)
 def redirect_url(short_url):
     url = Url.query.filter_by(short_url=short_url).first()
     if url:
