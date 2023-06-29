@@ -80,15 +80,13 @@ header.fixed::before{
 .hero{
     width: 100%;
     min-height: 100vh;
-    background-color: : 0D1B1E;
+    background-color: 0D1B1E;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     gap: 2rem;
 }
 
-
-}
 .hero-dashboard{
     width: 100%;
     min-height: 100vh;
