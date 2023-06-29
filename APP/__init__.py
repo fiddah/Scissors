@@ -11,14 +11,14 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
-base_dir = os.path.dirname(os.path.realpath(__file__))
+#base_dir = os.path.dirname(os.path.realpath(__file__))
 
-uri = os.environ.get('DATABASE_URL')
-if uri.startswith('postgres://'):
-    uri = uri.replace('postgres://', 'postgresql://', 1)
+#uri = os.environ.get('DATABASE_URL')
+#if uri.startswith('postgres://'):
+    #uri = uri.replace('postgres://', 'postgresql://', 1)
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = uri
+#app.config['SQLALCHEMY_DATABASE_URI'] = uri
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
@@ -46,8 +46,8 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
-with app.app_context():
-    db.create_all()    
+#with app.app_context():
+    #db.create_all()    
 
 from . import routes
 from .models import User, Url
