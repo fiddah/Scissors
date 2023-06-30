@@ -12,7 +12,7 @@ import io
 import shortuuid
 from . import app, db, mail, cache
 
-#otp = randint(100000,999999)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

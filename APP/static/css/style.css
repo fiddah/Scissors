@@ -393,9 +393,6 @@ table {
     .icons{
         display: none;
     }
-    .logo{
-        width: 40px;
-        height: 40px;
     }
     .navlist{
         position:absolute;
