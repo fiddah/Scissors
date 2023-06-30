@@ -2,8 +2,8 @@
 {% block title %}URL Shortener{% endblock %}
 {% block content %}
 
-<section class="hero">
-    <div class="hero-text">
+<section class="scissors">
+    <div class="scissors-text">
         {% if current_user.is_authenticated %}
         <h3 style="padding-bottom: 5px;">Hello {{current_user.username|capitalize}}</h3>
         <div class="url-form">
@@ -22,22 +22,20 @@
             </form>
         </div>
         {% else %}
-        <h5>Welcome to</h5>
-        <h1>Red<span>Route</span></h1>
-        <h4>Shorten. Share. Succeed.</h4>
-        <p><span>Shortening URLs, Analytics and Customization.</span></p>
+        <h1><span>Scissors</span></h1>
+        <h4>Shorten and Customize Your URL With Ease</h4>
         <a href="{{url_for('signup')}}">Sign up to get started</a>
         {% endif %}
     </div>
-    <div class="hero-img">
-        <img src="{{url_for('static', filename='images/home.png')}}" alt="RedRoute">
+    <div class="scissors-img">
+        <img src="{{url_for('static', filename='images/download.png')}}" alt="Scissors">
 
     </div>
 </section>
 
 <div class="icons">
-    <a href="https://twitter.com/RedX_13" target="_blank"><i class="ri-twitter-line"></i></a>
-    <a href="https://www.linkedin.com/in/noah-useghan-44b37b221/" target="_blank"><i class="ri-linkedin-line"></i></a>
+    <a href="https://twitter.com/hijabiicoder" target="_blank"><i class="ri-twitter-line"></i></a>
+    <a href="https://www.linkedin.com/in/fatimah-rufai/" target="_blank"><i class="ri-linkedin-line"></i></a>
 </div>
 
 <div class="scroll-down">
