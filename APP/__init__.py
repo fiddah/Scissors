@@ -46,8 +46,8 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
-#with app.app_context():
-    #db.create_all()    
+with app.app_context():
+    db.create_all()    
 
 from . import routes
 from .models import User, Url
