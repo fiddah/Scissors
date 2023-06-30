@@ -68,9 +68,9 @@ def signup():
             flash('This email is already registered.')
             return redirect(url_for('signup'))
 
-        password_hash = generate_password_hash(password)
+        password = generate_password_hash(password)
 
-        new_user = User(username=username, email=email, password_hash=password_hash)
+        new_user = User(username=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
 
