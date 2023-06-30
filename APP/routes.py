@@ -5,6 +5,8 @@ from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from random import randint
 from .models import User, Url
+import random, string, io, qrcode
+from flask import request
 import qrcode
 import io
 import shortuuid
@@ -16,30 +18,28 @@ otp = randint(100000,999999)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
+    
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email.lower()).first()
-        if user and user.confirmed == False:
-            try:
-                flash('Please verify your email first. Check spam and other folders if not found in inbox.')
-                msg = Message("RedRoute Email Verification", sender="admin@redr.site", recipients=[email])
-                msg.html = render_template('otp.html', otp=str(otp), username=user.username)
-                mail.send(msg)
-            except Exception as e:
-                print(e)
-                flash ("Verification failed. Please try again.")
-                return redirect(url_for('signup'))
-            return redirect(url_for('validate', email=email.lower()))
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+
         if user:
-            if check_password_hash(user.password, password):
+            if user and check_password_hash(user.password, password):
                 login_user(user)
+                flash('You are now logged in.')
                 return redirect(url_for('home'))
-            else:
-                flash('Password incorrect. Please try again.')
+            
+            if (user and check_password_hash(user.password, password)) == False:
+                flash('Please provide valid credentials.')
+                return redirect(url_for('login'))
+
         else:
-            flash('Email is not registered yet.')
+            flash('Account not found. Please sign up to continue.')
+            return redirect(url_for('signup'))
+        
     return render_template('login.html')
 
 @app.route('/logout')
@@ -52,36 +52,31 @@ def logout():
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+    
     if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        user = User.query.filter_by(email=email.lower()).first()
-        if user:
-            flash('Email already exists.')
-        elif len(username) < 2:
-            flash('Username must be greater than 1 character.')
-        elif len(password) < 6:
-            flash('Password must be at least 6 characters.')
-        elif password != confirm_password:
-            flash('Passwords don\'t match.')
-        else:
-            new_user = User(email=email.lower(), username=username, password=generate_password_hash(password, method='sha256'))
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-            try:
-                msg = Message("RedRoute Email Verification", sender="admin@redr.site", recipients=[email])
-                msg.html = render_template('otp.html', otp=str(otp), username=username)
-                mail.send(msg)
-            except Exception as e:
-                print(e)
-                flash ("Verification failed. Please try again.")
-                return redirect(url_for('signup'))
+        username_exists = User.query.filter_by(username=username).first()
+        if username_exists:
+            flash('This username already exists.')
+            return redirect(url_for('home'))
 
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Account created successfully. Please check your mail inbox or spam for verification.')
-            return redirect(url_for('validate', email=email.lower()))
+        email_exists = User.query.filter_by(email=email).first()
+        if email_exists:
+            flash('This email is already registered.')
+            return redirect(url_for('signup'))
+
+        password_hash = generate_password_hash(password)
+
+        new_user = User(username=username, email=email, password_hash=password_hash)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('You are now signed up.')
+        return redirect(url_for('login'))
+
     return render_template('signup.html')
 
 
@@ -191,77 +186,3 @@ def edit_url(id):
             return redirect(url_for('dashboard'))
         return render_template('edit.html', url=url)
     return 'URL not found.'
-
-
-@app.route('/validate/<email>', methods=['GET', 'POST'])
-def validate(email):
-    user = User.query.filter_by(email=email).first()
-    if user:
-        if request.method == 'POST':
-            user_otp = request.form['otp']
-            if not user_otp:
-                flash('Please enter OTP.')
-                return redirect(url_for('validate', email=email))
-            if int(user_otp) == otp:
-                user.confirmed = True
-                db.session.commit()
-                flash('Email verified successfully.')
-                return redirect(url_for('login'))
-            flash('Invalid OTP.')
-            return redirect(url_for('validate', email=email))
-        return render_template('validate.html', email=email)
-    return 'Email not found.'
-
-
-@app.route('/resend/<email>')
-def resend(email):
-    user = User.query.filter_by(email=email).first()
-    if user:
-        try:
-            msg = Message('Email Verification', sender="admin@redr.site", recipients=[email])
-            msg.html = render_template('otp.html', otp=str(otp))
-            mail.send(msg)
-        except:
-            flash ("Verification failed. Please try again.")
-            return redirect(url_for('signup'))
-        flash('OTP sent successfully. Please check your mail inbox or spam.')
-        return redirect(url_for('validate', email=email))
-    return 'Email not found.'
-
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form['email']
-        user = User.query.filter_by(email=email.lower()).first()
-        link = request.host_url + "reset_password/" + email
-        if user:
-            try:
-                msg = Message('Reset Password', sender="admin@redr.site", recipients=[email])
-                msg.html = render_template('reset_mail.html', link=link)
-                mail.send(msg)
-            except:
-                flash ("Reset password failed. Please try again.")
-                return redirect(url_for('login'))
-            flash('Reset password link sent successfully. Please check your mail inbox or spam.')
-            return redirect(url_for('login'))
-        flash('Email not found.')
-        return redirect(url_for('forgot_password'))
-    return render_template('forgot_password.html')
-
-@app.route('/reset_password/<email>', methods=['GET', 'POST'])
-def reset_password(email):
-    user = User.query.filter_by(email=email).first()
-    if user:
-        if request.method == 'POST':
-            password = request.form['password']
-            confirm_password = request.form['confirm_password']
-            if password == confirm_password:
-                user.password = generate_password_hash(password, method='sha256')
-                db.session.commit()
-                flash('Password reset successfully. Please login.')
-                return redirect(url_for('login'))
-            else:
-                flash('Passwords do not match. Please try again.')
-                return redirect(url_for('reset_password', email=email))
-        return render_template('reset_password.html', email=email)
-    return 'Email not found.'
