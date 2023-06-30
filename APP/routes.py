@@ -12,13 +12,12 @@ import io
 import shortuuid
 from . import app, db, mail, cache
 
-
-otp = randint(100000,999999)
+#otp = randint(100000,999999)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     
     if request.method == 'POST':
         email = request.form.get('email')
