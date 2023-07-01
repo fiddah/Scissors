@@ -1,16 +1,13 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
-from flask_share import Share
-from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
-from random import randint
 from .models import User, Url
 import random, string, io, qrcode
 from flask import request
 import qrcode
 import io
 import shortuuid
-from . import app, db, mail, cache
+from . import app, db, cache
 
 
 
