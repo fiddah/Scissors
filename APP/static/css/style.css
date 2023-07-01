@@ -52,7 +52,7 @@ header.fixed::before{
 }
 
 .navlist a{
-    color: red;
+    color: rgb(105, 65, 65);
     font-size: 18px;
     font-weight: 500;
     padding: 8px 15px;
@@ -96,7 +96,7 @@ section{
 }
 
 .scissors-text{
-    color: red;
+    color: rgb(116, 80, 80);
     font-size: 15px;
     font-weight: 400;
     margin-bottom: 40px;
